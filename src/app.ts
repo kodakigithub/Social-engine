@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { Prisma } from './generated/prisma/client.js';
 import { config } from './config.js';
 import { authPlugin } from './plugins/auth.js';
+import { accountRoutes } from './routes/accounts.js';
 import { healthRoutes } from './routes/health.js';
 import { postRoutes } from './routes/posts.js';
 
@@ -42,6 +43,7 @@ export async function buildApp() {
   await app.register(authPlugin);
   await app.register(healthRoutes);
   await app.register(postRoutes);
+  await app.register(accountRoutes);
 
   return app;
 }
