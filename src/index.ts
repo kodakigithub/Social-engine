@@ -9,6 +9,25 @@ const app = Fastify({
   },
 });
 
+// Error handler - catches Zod validation errors and returns clean 400
+app.setErrorHandler((error, request, reply) => {
+  if (error instanceof z.ZodError) {
+    return reply.status(400).send({
+      error: 'Validation failed',
+      details: error.errors.map((e) => ({
+        field: e.path.join('.'),
+        message: e.message,
+      })),
+    });
+  }
+
+  // Log unexpected errors
+  app.log.error(error);
+  return reply.status(500).send({
+    error: 'Internal server error',
+  });
+});
+
 // Health check
 app.get('/health', async () => {
   const dbConnected = await checkDatabaseConnection();
