@@ -6,6 +6,8 @@ import { authPlugin } from './plugins/auth.js';
 import { accountRoutes } from './routes/accounts.js';
 import { healthRoutes } from './routes/health.js';
 import { postRoutes } from './routes/posts.js';
+import { publishRoutes } from './routes/publish.js';
+import { linkedInAuthRoutes } from './routes/linkedin-auth.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -39,11 +41,15 @@ export async function buildApp() {
     });
   });
 
-  // Register plugins
+  // Register OAuth routes (no auth required)
+  await app.register(linkedInAuthRoutes);
+
+  // Register plugins (auth required)
   await app.register(authPlugin);
   await app.register(healthRoutes);
   await app.register(postRoutes);
   await app.register(accountRoutes);
+  await app.register(publishRoutes);
 
   return app;
 }

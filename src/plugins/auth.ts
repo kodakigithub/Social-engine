@@ -3,8 +3,8 @@ import { config } from '../config.js';
 
 export async function authPlugin(app: FastifyInstance) {
   app.addHook('onRequest', async (request, reply) => {
-    // Skip auth for health check
-    if (request.url === '/health') {
+    // Skip auth for health check and OAuth routes
+    if (request.url === '/health' || request.url.startsWith('/auth/')) {
       return;
     }
 
